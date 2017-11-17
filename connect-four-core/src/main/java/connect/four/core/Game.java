@@ -61,6 +61,16 @@ public class Game implements IGame {
 	}
 
 	@Override
+	public IPlayer getPlayer1() {
+		return players[0];
+	}
+
+	@Override
+	public IPlayer getPlayer2() {
+		return players[1];
+	}
+
+	@Override
 	public GameStatus getStatus() {
 		return status;
 	}

@@ -8,9 +8,13 @@ public interface IGame {
 
 	void dropChecker(IPlayer player, int col) throws ActionNotAllowedException, InvalidGridLocationException;
 
+	IGameResult getGameResult();
+
 	GameGrid getGrid();
 
-	GameStatus getStatus();
+	IPlayer getPlayer1();
 
-	IGameResult getGameResult();
+	IPlayer getPlayer2();
+
+	GameStatus getStatus();
 }

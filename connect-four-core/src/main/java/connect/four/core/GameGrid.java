@@ -44,6 +44,15 @@ public class GameGrid {
 		return owner;
 	}
 
+	public String getOwnerName(int row, int col) throws InvalidGridLocationException {
+		String ownerName = null;
+		IPlayer owner = getOwner(row, col);
+		if (owner != null) {
+			ownerName = owner.getName();
+		}
+		return ownerName;
+	}
+
 	public IGameResult getWinner() {
 		IGameResult result = null;
 		try {
