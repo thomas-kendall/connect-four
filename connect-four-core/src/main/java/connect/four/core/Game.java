@@ -19,15 +19,15 @@ public class Game implements IGame {
 	}
 
 	@Override
-	public void dropChecker(IPlayer player, int col) {
+	public void dropChecker(IPlayer player, int col) throws ActionNotAllowedException, InvalidGridLocationException {
 		// Validate game status
 		if (status == GameStatus.COMPLETED) {
-			// TODO: throw exception
+			throw new ActionNotAllowedException("The game is already completed.");
 		}
 
 		// Validate player
 		if (player != getCurrentPlayer()) {
-			// TODO: throw exception
+			throw new ActionNotAllowedException("It is not the turn for " + player.getName());
 		}
 
 		// Drop checker

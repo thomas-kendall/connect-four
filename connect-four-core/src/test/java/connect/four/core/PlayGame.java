@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 public class PlayGame {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws ActionNotAllowedException, InvalidGridLocationException {
 		new PlayGame();
 	}
 
@@ -13,7 +13,7 @@ public class PlayGame {
 	private Player currentPlayer;
 	private Scanner scanner;
 
-	public PlayGame() {
+	public PlayGame() throws ActionNotAllowedException, InvalidGridLocationException {
 		scanner = new Scanner(System.in);
 		player1 = new Player("Player 1", 'X');
 		player2 = new Player("Player 2", 'O');
@@ -41,7 +41,7 @@ public class PlayGame {
 		if (winner == null) {
 			System.out.println("Cat game!");
 		} else {
-			System.out.println(((Player) winner.getWinningPlayer()).getName() + " won.");
+			System.out.println(winner.getWinningPlayer().getName() + " won.");
 		}
 	}
 

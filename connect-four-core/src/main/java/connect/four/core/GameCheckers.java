@@ -31,7 +31,7 @@ public class GameCheckers {
 		return checkers.isEmpty();
 	}
 
-	public Checker takeChecker(IPlayer player) {
+	public Checker takeChecker(IPlayer player) throws ActionNotAllowedException {
 		Checker result = null;
 
 		// Find a checker
@@ -44,7 +44,7 @@ public class GameCheckers {
 
 		// Did they try to get one that doesn't exist?
 		if (result == null) {
-			// TODO: throw exception
+			throw new ActionNotAllowedException("There are no checkers available for this player.");
 		}
 
 		// Remove it from the list

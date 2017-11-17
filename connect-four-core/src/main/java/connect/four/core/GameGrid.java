@@ -8,7 +8,7 @@ public class GameGrid {
 		grid = new Checker[GameProperties.ROWS][GameProperties.COLS];
 	}
 
-	public void dropChecker(int col, Checker checker) {
+	public void dropChecker(int col, Checker checker) throws InvalidGridLocationException {
 		validateCol(col);
 
 		// Find the open row
@@ -26,12 +26,12 @@ public class GameGrid {
 		grid[openRow][col] = checker;
 	}
 
-	public Checker getChecker(int row, int col) {
+	public Checker getChecker(int row, int col) throws InvalidGridLocationException {
 		validateRowCol(row, col);
 		return grid[row][col];
 	}
 
-	private IPlayer getOwner(int row, int col) {
+	private IPlayer getOwner(int row, int col) throws InvalidGridLocationException {
 		IPlayer owner = null;
 		Checker checker = getChecker(row, col);
 		if (checker != null) {
@@ -42,39 +42,42 @@ public class GameGrid {
 
 	public GameWinner getWinner() {
 		GameWinner result = null;
+		try {
+			for (int row = 0; row < GameProperties.ROWS; row++) {
+				for (int col = 0; col < GameProperties.COLS; col++) {
+					// Find horizontal
+					result = getWinnerHorizontal(row, col);
+					if (result != null) {
+						return result;
+					}
 
-		for (int row = 0; row < GameProperties.ROWS; row++) {
-			for (int col = 0; col < GameProperties.COLS; col++) {
-				// Find horizontal
-				result = getWinnerHorizontal(row, col);
-				if (result != null) {
-					return result;
-				}
+					// Find vertical
+					result = getWinnerVertical(row, col);
+					if (result != null) {
+						return result;
+					}
 
-				// Find vertical
-				result = getWinnerVertical(row, col);
-				if (result != null) {
-					return result;
-				}
+					// Find diagonal (down-right)
+					result = getWinnerDiagonalDownRight(row, col);
+					if (result != null) {
+						return result;
+					}
 
-				// Find diagonal (down-right)
-				result = getWinnerDiagonalDownRight(row, col);
-				if (result != null) {
-					return result;
-				}
-
-				// Find diagonal (up-right)
-				result = getWinnerDiagonalUpRight(row, col);
-				if (result != null) {
-					return result;
+					// Find diagonal (up-right)
+					result = getWinnerDiagonalUpRight(row, col);
+					if (result != null) {
+						return result;
+					}
 				}
 			}
+		} catch (InvalidGridLocationException ex) {
+			// This should never happen
+			throw new RuntimeException(ex);
 		}
-
 		return null;
 	}
 
-	private GameWinner getWinnerDiagonalDownRight(int row, int col) {
+	private GameWinner getWinnerDiagonalDownRight(int row, int col) throws InvalidGridLocationException {
 		GridLocation[] locations = new GridLocation[GameProperties.TARGET];
 		if (col > GameProperties.COLS - GameProperties.TARGET) {
 			return null;
@@ -98,7 +101,7 @@ public class GameGrid {
 		return new GameWinner(player, locations);
 	}
 
-	private GameWinner getWinnerDiagonalUpRight(int row, int col) {
+	private GameWinner getWinnerDiagonalUpRight(int row, int col) throws InvalidGridLocationException {
 		GridLocation[] locations = new GridLocation[GameProperties.TARGET];
 		if (col > GameProperties.COLS - GameProperties.TARGET) {
 			return null;
@@ -122,7 +125,7 @@ public class GameGrid {
 		return new GameWinner(player, locations);
 	}
 
-	private GameWinner getWinnerHorizontal(int row, int col) {
+	private GameWinner getWinnerHorizontal(int row, int col) throws InvalidGridLocationException {
 		GridLocation[] locations = new GridLocation[GameProperties.TARGET];
 		if (col > GameProperties.COLS - GameProperties.TARGET) {
 			return null;
@@ -143,7 +146,7 @@ public class GameGrid {
 		return new GameWinner(player, locations);
 	}
 
-	private GameWinner getWinnerVertical(int row, int col) {
+	private GameWinner getWinnerVertical(int row, int col) throws InvalidGridLocationException {
 		GridLocation[] locations = new GridLocation[GameProperties.TARGET];
 		if (row > GameProperties.ROWS - GameProperties.TARGET) {
 			return null;
@@ -164,19 +167,19 @@ public class GameGrid {
 		return new GameWinner(player, locations);
 	}
 
-	private void validateCol(int col) {
+	private void validateCol(int col) throws InvalidGridLocationException {
 		if (col < 0 || col >= GameProperties.COLS) {
-			throw new IllegalArgumentException("col must be between 0 and " + GameProperties.COLS);
+			throw new InvalidGridLocationException("col must be between 0 and " + GameProperties.COLS);
 		}
 	}
 
-	private void validateRow(int row) {
+	private void validateRow(int row) throws InvalidGridLocationException {
 		if (row < 0 || row >= GameProperties.ROWS) {
-			throw new IllegalArgumentException("row must be between 0 and " + GameProperties.ROWS);
+			throw new InvalidGridLocationException("row must be between 0 and " + GameProperties.ROWS);
 		}
 	}
 
-	private void validateRowCol(int row, int col) {
+	private void validateRowCol(int row, int col) throws InvalidGridLocationException {
 		validateRow(row);
 		validateCol(col);
 	}

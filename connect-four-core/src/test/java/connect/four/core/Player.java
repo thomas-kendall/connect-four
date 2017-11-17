@@ -10,6 +10,7 @@ public class Player implements IPlayer {
 		this.token = token;
 	}
 
+	@Override
 	public String getName() {
 		return name;
 	}
