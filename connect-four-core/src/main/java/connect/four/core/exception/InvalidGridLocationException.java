@@ -1,4 +1,4 @@
-package connect.four.core;
+package connect.four.core.exception;
 
 public class InvalidGridLocationException extends ConnectFourException {
 

@@ -1,5 +1,10 @@
 package connect.four.core;
 
+import connect.four.core.exception.ActionNotAllowedException;
+import connect.four.core.exception.InvalidGridLocationException;
+import connect.four.core.result.IGameResult;
+import connect.four.core.result.NoWinnerResult;
+
 public class Game implements IGame {
 
 	private GameGrid grid;
@@ -7,7 +12,7 @@ public class Game implements IGame {
 	private int currentPlayerIndex;
 	private GameStatus status;
 	private GameCheckers checkers;
-	private GameWinner winner;
+	private IGameResult gameResult;
 
 	public Game(IPlayer... players) {
 		this.grid = new GameGrid();
@@ -15,7 +20,7 @@ public class Game implements IGame {
 		this.players = players;
 		currentPlayerIndex = 0;
 		status = GameStatus.IN_PROGRESS;
-		winner = null;
+		gameResult = null;
 	}
 
 	@Override
@@ -46,6 +51,11 @@ public class Game implements IGame {
 	}
 
 	@Override
+	public IGameResult getGameResult() {
+		return gameResult;
+	}
+
+	@Override
 	public GameGrid getGrid() {
 		return grid;
 	}
@@ -53,11 +63,6 @@ public class Game implements IGame {
 	@Override
 	public GameStatus getStatus() {
 		return status;
-	}
-
-	@Override
-	public GameWinner getWinner() {
-		return winner;
 	}
 
 	private void setNextPlayer() {
@@ -69,14 +74,15 @@ public class Game implements IGame {
 
 	private void updateGameStatus() {
 		// Is there a winner?
-		winner = grid.getWinner();
-		if (winner != null) {
+		gameResult = grid.getWinner();
+		if (gameResult != null) {
 			status = GameStatus.COMPLETED;
 		}
 
 		// Are we out of checkers?
-		if (checkers.isEmpty()) {
+		else if (checkers.isEmpty()) {
 			status = GameStatus.COMPLETED;
+			gameResult = new NoWinnerResult();
 		}
 	}
 

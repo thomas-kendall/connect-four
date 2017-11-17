@@ -3,6 +3,8 @@ package connect.four.core;
 import java.util.ArrayList;
 import java.util.List;
 
+import connect.four.core.exception.ActionNotAllowedException;
+
 public class GameCheckers {
 
 	private List<Checker> checkers;

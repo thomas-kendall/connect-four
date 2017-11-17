@@ -1,5 +1,7 @@
 package connect.four.core;
 
+import connect.four.core.exception.InvalidGridLocationException;
+
 public class GameRenderer {
 
 	// -|-|-|-|-|-|-

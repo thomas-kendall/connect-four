@@ -2,6 +2,12 @@ package connect.four.core;
 
 import java.util.Scanner;
 
+import connect.four.core.exception.ActionNotAllowedException;
+import connect.four.core.exception.InvalidGridLocationException;
+import connect.four.core.result.IGameResult;
+import connect.four.core.result.NoWinnerResult;
+import connect.four.core.result.WinnerResult;
+
 public class PlayGame {
 
 	public static void main(String[] args) throws ActionNotAllowedException, InvalidGridLocationException {
@@ -37,11 +43,12 @@ public class PlayGame {
 		System.out.println();
 
 		System.out.print("Game over. ");
-		GameWinner winner = game.getWinner();
-		if (winner == null) {
+		IGameResult gameResult = game.getGameResult();
+		if (gameResult instanceof NoWinnerResult) {
 			System.out.println("Cat game!");
 		} else {
-			System.out.println(winner.getWinningPlayer().getName() + " won.");
+			WinnerResult winnerResult = (WinnerResult) gameResult;
+			System.out.println(winnerResult.getWinningPlayer().getName() + " won.");
 		}
 	}
 

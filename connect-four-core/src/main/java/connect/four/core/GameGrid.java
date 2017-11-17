@@ -1,5 +1,9 @@
 package connect.four.core;
 
+import connect.four.core.exception.InvalidGridLocationException;
+import connect.four.core.result.IGameResult;
+import connect.four.core.result.WinnerResult;
+
 public class GameGrid {
 
 	private Checker[][] grid;
@@ -40,8 +44,8 @@ public class GameGrid {
 		return owner;
 	}
 
-	public GameWinner getWinner() {
-		GameWinner result = null;
+	public IGameResult getWinner() {
+		IGameResult result = null;
 		try {
 			for (int row = 0; row < GameProperties.ROWS; row++) {
 				for (int col = 0; col < GameProperties.COLS; col++) {
@@ -77,7 +81,7 @@ public class GameGrid {
 		return null;
 	}
 
-	private GameWinner getWinnerDiagonalDownRight(int row, int col) throws InvalidGridLocationException {
+	private IGameResult getWinnerDiagonalDownRight(int row, int col) throws InvalidGridLocationException {
 		GridLocation[] locations = new GridLocation[GameProperties.TARGET];
 		if (col > GameProperties.COLS - GameProperties.TARGET) {
 			return null;
@@ -98,10 +102,10 @@ public class GameGrid {
 			}
 		}
 
-		return new GameWinner(player, locations);
+		return new WinnerResult(player, locations);
 	}
 
-	private GameWinner getWinnerDiagonalUpRight(int row, int col) throws InvalidGridLocationException {
+	private IGameResult getWinnerDiagonalUpRight(int row, int col) throws InvalidGridLocationException {
 		GridLocation[] locations = new GridLocation[GameProperties.TARGET];
 		if (col > GameProperties.COLS - GameProperties.TARGET) {
 			return null;
@@ -122,10 +126,10 @@ public class GameGrid {
 			}
 		}
 
-		return new GameWinner(player, locations);
+		return new WinnerResult(player, locations);
 	}
 
-	private GameWinner getWinnerHorizontal(int row, int col) throws InvalidGridLocationException {
+	private IGameResult getWinnerHorizontal(int row, int col) throws InvalidGridLocationException {
 		GridLocation[] locations = new GridLocation[GameProperties.TARGET];
 		if (col > GameProperties.COLS - GameProperties.TARGET) {
 			return null;
@@ -143,10 +147,10 @@ public class GameGrid {
 			}
 		}
 
-		return new GameWinner(player, locations);
+		return new WinnerResult(player, locations);
 	}
 
-	private GameWinner getWinnerVertical(int row, int col) throws InvalidGridLocationException {
+	private IGameResult getWinnerVertical(int row, int col) throws InvalidGridLocationException {
 		GridLocation[] locations = new GridLocation[GameProperties.TARGET];
 		if (row > GameProperties.ROWS - GameProperties.TARGET) {
 			return null;
@@ -164,7 +168,7 @@ public class GameGrid {
 			}
 		}
 
-		return new GameWinner(player, locations);
+		return new WinnerResult(player, locations);
 	}
 
 	private void validateCol(int col) throws InvalidGridLocationException {
