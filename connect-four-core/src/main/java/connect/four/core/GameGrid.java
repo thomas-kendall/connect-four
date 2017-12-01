@@ -24,7 +24,7 @@ public class GameGrid {
 			}
 		}
 		if (openRow == -1) {
-			throw new IllegalArgumentException("No openings in col " + col);
+			throw new InvalidGridLocationException("No openings in col " + col);
 		}
 
 		grid[openRow][col] = checker;
@@ -33,6 +33,18 @@ public class GameGrid {
 	public Checker getChecker(int row, int col) throws InvalidGridLocationException {
 		validateRowCol(row, col);
 		return grid[row][col];
+	}
+
+	public int getLowestRowPlayed(int col) {
+		int result = -1;
+		for (int row = 0; row < GameProperties.ROWS; row++) {
+			if (grid[row][col] == null) {
+				break;
+			} else {
+				result = row;
+			}
+		}
+		return result;
 	}
 
 	private IPlayer getOwner(int row, int col) throws InvalidGridLocationException {

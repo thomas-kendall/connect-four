@@ -1,13 +1,18 @@
 package connect.four.web.api.model;
 
+import java.util.List;
+
 public class GameApiModel {
 
 	private int id;
-	private String player1;
-	private String player2;
 	private String gameStatus;
 	private GameGridApiModel gameGrid;
 	private GameResultApiModel gameResult;
+	private List<GameActionApiModel> actions;
+
+	public List<GameActionApiModel> getActions() {
+		return actions;
+	}
 
 	public GameGridApiModel getGameGrid() {
 		return gameGrid;
@@ -25,12 +30,8 @@ public class GameApiModel {
 		return id;
 	}
 
-	public String getPlayer1() {
-		return player1;
-	}
-
-	public String getPlayer2() {
-		return player2;
+	public void setActions(List<GameActionApiModel> actions) {
+		this.actions = actions;
 	}
 
 	public void setGameGrid(GameGridApiModel gameGrid) {
@@ -49,11 +50,4 @@ public class GameApiModel {
 		this.id = id;
 	}
 
-	public void setPlayer1(String player1) {
-		this.player1 = player1;
-	}
-
-	public void setPlayer2(String player2) {
-		this.player2 = player2;
-	}
 }

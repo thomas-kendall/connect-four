@@ -1,5 +1,8 @@
 package connect.four.core;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import connect.four.core.exception.ActionNotAllowedException;
 import connect.four.core.exception.InvalidGridLocationException;
 import connect.four.core.result.IGameResult;
@@ -13,6 +16,7 @@ public class Game implements IGame {
 	private GameStatus status;
 	private GameCheckers checkers;
 	private IGameResult gameResult;
+	private List<GameAction> actions;
 
 	public Game(IPlayer... players) {
 		this.grid = new GameGrid();
@@ -21,6 +25,7 @@ public class Game implements IGame {
 		currentPlayerIndex = 0;
 		status = GameStatus.IN_PROGRESS;
 		gameResult = null;
+		actions = new ArrayList<>();
 	}
 
 	@Override
@@ -39,11 +44,21 @@ public class Game implements IGame {
 		Checker checker = checkers.takeChecker(player);
 		grid.dropChecker(col, checker);
 
+		// Store the action
+		int rowPlayed = grid.getLowestRowPlayed(col);
+		GameAction action = new GameAction(player, col, rowPlayed);
+		actions.add(action);
+
 		// Update game status
 		updateGameStatus();
 
 		// Set next player
 		setNextPlayer();
+	}
+
+	@Override
+	public List<GameAction> getActions() {
+		return actions;
 	}
 
 	private IPlayer getCurrentPlayer() {

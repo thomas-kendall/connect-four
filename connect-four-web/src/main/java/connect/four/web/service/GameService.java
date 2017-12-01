@@ -15,6 +15,7 @@ import connect.four.core.IGame;
 import connect.four.core.IPlayer;
 import connect.four.core.exception.ActionNotAllowedException;
 import connect.four.core.exception.InvalidGridLocationException;
+import connect.four.web.api.model.GameActionApiModel;
 import connect.four.web.api.model.GameApiModel;
 import connect.four.web.api.model.GameGridApiModel;
 import connect.four.web.api.model.GameResultApiModel;
@@ -28,12 +29,10 @@ public class GameService {
 	private Map<Integer, IGame> gameMap = new HashMap<>();
 	private Random random = new Random();
 
-	public GameApiModel createGame(String playerName) {
-		// TODO: Don't allow the same name as AI
-
+	public GameApiModel createGame() {
 		int id = nextId++;
-		IPlayer player1 = new WebPlayer(playerName);
-		IPlayer player2 = new AiPlayer("AI");
+		IPlayer player1 = new WebPlayer("X");
+		IPlayer player2 = new AiPlayer("O");
 		if (random.nextBoolean()) {
 			IPlayer p = player1;
 			player1 = player2;
@@ -111,9 +110,9 @@ public class GameService {
 		apiModel.setId(id);
 		apiModel.setGameStatus(game.getStatus().toString());
 		apiModel.setGameGrid(new GameGridApiModel(game));
-		apiModel.setPlayer1(game.getPlayer1().getName());
-		apiModel.setPlayer2(game.getPlayer2().getName());
 		apiModel.setGameResult(new GameResultApiModel(game.getGameResult()));
+		apiModel.setActions(
+				game.getActions().stream().map(action -> new GameActionApiModel(action)).collect(Collectors.toList()));
 		return apiModel;
 	}
 

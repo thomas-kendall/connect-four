@@ -1,0 +1,24 @@
+<html ng-app="app">
+	<head>
+		<title>Connect4 - Machine Learning</title>
+	    <link href="styles.css" rel="stylesheet">
+	
+	     <!-- Angular -->
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular-route.min.js"></script>		
+		
+		<!-- D3.js -->
+		<script src="https://d3js.org/d3.v4.min.js"></script>
+	</head>
+	<body>
+		<h1>Connect4 - Machine Learning</h1>
+		<ng-view></ng-view>
+	
+	    <!-- Application scripts -->
+	    <script src="app/app.js"></script>    
+	    <script src="app/services/game-api.js"></script>    
+	    <script src="app/services/game-service.js"></script>    
+	    <script src="app/controllers/home-controller.js"></script>    
+	    <script src="app/controllers/play-controller.js"></script>    
+	</body>
+</html>
