@@ -1,4 +1,4 @@
-angular.module('app').factory('gameService', ['$location', 'gameApi', function($location, gameApi){
+angular.module('app').factory('gameService', ['$rootScope', '$timeout', 'gameApi', function($rootScope, $timeout, gameApi){
 	var rows = 6;
 	var cols = 7;
 	var games = {};	
@@ -7,20 +7,43 @@ angular.module('app').factory('gameService', ['$location', 'gameApi', function($
 		var game = games[id];
 		if(col < 0 || col >= cols) return false;
 		if(game.apiModel.gameStatus !== 'IN_PROGRESS') return false;
-		if(game.waitingOnServer) return false;
+		if(game.waitingForServer) return false;
 		if(getCurrentPlayer(id) !== 'X') return false;
 		if(game.apiModel.gameGrid.rows[rows-1][col] !== null) return false;
 		return true;
 	};	
 	
-	var createGame = function(){
+	var createGame = function(controllerScope, onActionCallback){
 		return gameApi.createGame().then(function(gameApiModel){
-			games[gameApiModel.id] = {
+			var game = {
 				apiModel: gameApiModel,
-				waitingForServer: false
+				waitingForServer: false,
+				actionsProcessed: 0
 			};
+			games[gameApiModel.id] = game;
+			
+			// Wire up the callback
+			var handler = $rootScope.$on(getActionEventId(gameApiModel.id), onActionCallback);
+			controllerScope.$on('$destroy', handler);
+			
+			// Fire off any actions already done in the game
+			processActions(gameApiModel.id);
+			
 			return gameApiModel.id;
 		});
+	};
+	
+	var processActions = function(id) {
+		var game = games[id];
+		if(game.actionsProcessed < game.apiModel.actions.length){
+			var action = getAction(id, game.actionsProcessed);
+			notifyActionEvent(id, action);
+			game.actionsProcessed++;
+			
+			if(game.actionsProcessed < game.apiModel.actions.length){
+				$timeout(processActions, 200, true, id);
+			}
+		}
 	};
 	
 	var dropChecker = function(id, col){
@@ -30,6 +53,7 @@ angular.module('app').factory('gameService', ['$location', 'gameApi', function($
 		return gameApi.dropChecker(id, col).then(function(gameApiModel){
 			game.apiModel = gameApiModel;
 			game.waitingForServer = false;
+			processActions(id);				
 		});
 	};	
 	
@@ -42,6 +66,10 @@ angular.module('app').factory('gameService', ['$location', 'gameApi', function($
 		return action;
 	};
 	
+	var getActionEventId = function(id) {
+		return 'game-service-on-action-event-' + id;
+	};
+	
 	var getCols = function() {
 		return cols;
 	};
@@ -49,6 +77,7 @@ angular.module('app').factory('gameService', ['$location', 'gameApi', function($
 	var getCurrentPlayer = function(id) {
 		var game = games[id];
 		if(game.apiModel.actions.length === 0) return 'X';
+		if(game.waitingForServer) return 'O';
 		var lastAction = game.apiModel.actions[game.apiModel.actions.length - 1];
 		return lastAction.player === 'X'? 'O' : 'X';
 	};
@@ -66,6 +95,31 @@ angular.module('app').factory('gameService', ['$location', 'gameApi', function($
 		return rows;
 	};
 	
+	var getStatus = function(id) {
+		var status = "";
+		var game = games[id];
+		if(game.apiModel.gameStatus === 'IN_PROGRESS'){
+			if(getCurrentPlayer(id) === 'X'){
+				status = 'Your turn, play a checker.';
+			} else {
+				status = 'Waiting on AI...';
+			}
+		} else if(isGameOver(id)){
+			var isWinner = game.apiModel.gameResult.winner === 'X';
+			status = 'Game over. You ' + (isWinner ? 'win' : 'lose') + '!'; 
+		}
+		return status;
+	};
+	
+	var isGameOver = function(id) {
+		var game = games[id];		
+		return game.apiModel.gameStatus === 'COMPLETED';
+	}
+	
+	var notifyActionEvent = function(id, action) {
+		$rootScope.$emit(getActionEventId(id), action);
+	};
+	
 	return {
 		canDropChecker: canDropChecker,
 		createGame: createGame,
@@ -76,5 +130,7 @@ angular.module('app').factory('gameService', ['$location', 'gameApi', function($
 		getGameJson: getGameJson,
 		getGames: getGames,
 		getRows: getRows,
+		getStatus: getStatus,
+		isGameOver: isGameOver,
 	};
 }]);

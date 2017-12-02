@@ -1,4 +1,7 @@
 <div ng-controller="playController">
+	<p>{{statusMessage}}</p>
 	<div id="game"></div>
-	{{message}}	
+	<button ng-click="quitGame()">Back Home</button>
+	<button ng-click="startNewGame()" ng-show="isGameOver()">Play Again</button>
+	<div style="display: none;">{{json}}</div>
 </div>

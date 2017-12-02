@@ -1,5 +1,6 @@
 angular.module('app').controller('playController', ['$scope', '$location', '$timeout', 'gameService', function($scope, $location, $timeout, gameService){	
-	$scope.message = "";
+	$scope.statusMessage = "";
+	$scope.json = "";
 	$scope.gameId = null;
 	var svg = null;
 	var width = 700;
@@ -9,28 +10,35 @@ angular.module('app').controller('playController', ['$scope', '$location', '$tim
 	var squareHeight = height/gameService.getRows();
 	var checkerContainerRadius = squareWidth/2 - checkerContainerMargin/2;
 	var checkerRadius = checkerContainerRadius - 2;
-	var checkersDrawn;
+	var checkersDrawn = 0;
 	var selectedCol = -1;
 
-	var startNewGame = function(){
-		gameService.createGame().then(function(gameId){
+	$scope.quitGame = function() {
+		$location.path("/home");
+	};
+	
+	$scope.startNewGame = function() {
+		checkersDrawn = 0;
+		selectedCol = -1;
+		drawGameGrid();
+		gameService.createGame($scope, onAction).then(function(gameId){
 			$scope.gameId = gameId;
-			checkersDrawn = 0;
-			drawGameGrid();
-			drawNextDroppedChecker();
+			updateStatus();
 		});		
 	};
 	
-	var drawNextDroppedChecker = function() {
-		var action = gameService.getAction($scope.gameId, checkersDrawn);
-		if(action !== null){
-			drawCheckerDrop(action.player === 'X', action.col, action.row);
-			checkersDrawn++;
-			$timeout(drawNextDroppedChecker, 500);
-		}
+	$scope.isGameOver = function() {
+		if($scope.gameId === null) return false;
+		return gameService.isGameOver($scope.gameId);
 	};
 	
-	var drawGameGrid = function(){		
+	var onAction = function(event, action) {
+		drawCheckerDrop(action.player === 'X', action.col, action.row);
+	};
+	
+	
+	var drawGameGrid = function(){
+		d3.select('#game').html('');
 		svg = d3.select('#game').append('svg').attr('width', width).attr('height', height).append('g');
 		
 		// Draw container
@@ -86,21 +94,21 @@ angular.module('app').controller('playController', ['$scope', '$location', '$tim
 		var t = d3.transition().duration(700).ease(d3.easeElastic);
 		d3.select('circle.' + checkerClass).transition(t).attr('cy', cy);
 	};
-	
-	// Create the game
-	startNewGame();
-	
-//	gameService.getGames().then(function(games){
-//		$scope.message = angular.toJson(games);
-//	});	
-	
+		
 	var dropChecker = function(col){
 		if(gameService.canDropChecker($scope.gameId, col)){
 			gameService.dropChecker($scope.gameId, col).then(function(){
-				$scope.message = gameService.getGameJson($scope.gameId); 
-				drawNextDroppedChecker();
-			});		
+				$scope.json = gameService.getGameJson($scope.gameId); 
+				updateStatus();
+			});
 		}
+		updateStatus();
 	};
-		
+	
+	var updateStatus = function() {
+		$scope.statusMessage = gameService.getStatus($scope.gameId);
+	};
+
+	// Create the game
+	$scope.startNewGame();	
 }]);
