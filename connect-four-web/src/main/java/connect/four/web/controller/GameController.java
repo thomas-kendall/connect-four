@@ -16,7 +16,7 @@ import connect.four.web.api.model.GameApiModel;
 import connect.four.web.service.GameService;
 
 @RestController
-@RequestMapping("/games")
+@RequestMapping("/api/games")
 public class GameController {
 
 	@Autowired

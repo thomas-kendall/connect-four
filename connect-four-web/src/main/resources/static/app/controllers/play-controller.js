@@ -59,10 +59,12 @@ angular.module('app').controller('playController', ['$scope', '$location', '$tim
         // Attach hover handlers for top row
         d3.selectAll('.container-row-' + (gameService.getRows() - 1))
         .on('mouseover', function(){
-        	var containerCircle = d3.select(this); 
-        	selectedCol = parseInt(containerCircle.attr('data-col'));
-        	if(gameService.canDropChecker($scope.gameId, selectedCol)){
-        		containerCircle.style('fill', '#F00');
+        	if($scope.gameId !== null){
+	        	var containerCircle = d3.select(this); 
+	        	selectedCol = parseInt(containerCircle.attr('data-col'));
+	        	if(gameService.canDropChecker($scope.gameId, selectedCol)){
+	        		containerCircle.style('fill', '#F00');
+	        	}
         	}
         })
         .on('mouseout', function(){
@@ -70,8 +72,10 @@ angular.module('app').controller('playController', ['$scope', '$location', '$tim
         	d3.select(this).style('fill', '#FFF');
         })
         .on('click', function(){
-        	if(gameService.canDropChecker($scope.gameId, selectedCol)){
-        		dropChecker(selectedCol);
+        	if($scope.gameId !== null){
+	        	if(gameService.canDropChecker($scope.gameId, selectedCol)){
+	        		dropChecker(selectedCol);
+	        	}
         	}
         });
 	};

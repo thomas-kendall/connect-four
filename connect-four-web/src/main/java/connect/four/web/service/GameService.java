@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import connect.four.core.GameFactory;
@@ -24,6 +25,9 @@ import connect.four.web.game.model.WebPlayer;
 
 @Service
 public class GameService {
+
+	@Autowired
+	private StatisticsService statisticsService;
 
 	private int nextId = 1;
 	private Map<Integer, IGame> gameMap = new HashMap<>();
@@ -63,6 +67,11 @@ public class GameService {
 		if (game.getStatus() != GameStatus.COMPLETED) {
 			AiPlayer aiPlayer = getAiPlayer(game);
 			makeAiDrop(game, aiPlayer);
+		}
+
+		// Is the game over?
+		if (game.getStatus() == GameStatus.COMPLETED) {
+			statisticsService.onGameFinished(game);
 		}
 
 		return toApiModel(id, game);

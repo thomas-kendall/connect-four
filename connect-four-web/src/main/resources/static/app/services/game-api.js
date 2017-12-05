@@ -2,14 +2,14 @@ angular.module('app').service('gameApi', ['$http', function($http){
 	var config = {headers: {'Content-Type': 'application/json'}};
 	
 	this.getGames = function(){
-		return $http.get('/games', config)
+		return $http.get('/api/games', config)
 		.then(function(response){
 			return response.data;
 		});
 	};
 	
 	this.createGame = function(){
-		return $http.post('/games', config)
+		return $http.post('/api/games', config)
 		.then(function(response){
 			return response.data;
 		});
@@ -19,7 +19,7 @@ angular.module('app').service('gameApi', ['$http', function($http){
 		var data = {
 			col: column
 		};
-		return $http.post('/games/' + gameId + '/checkers', data, config)
+		return $http.post('/api/games/' + gameId + '/checkers', data, config)
 		.then(function(response){
 			return response.data;
 		});
