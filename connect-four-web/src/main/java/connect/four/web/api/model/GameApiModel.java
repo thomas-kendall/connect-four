@@ -9,9 +9,15 @@ public class GameApiModel {
 	private GameGridApiModel gameGrid;
 	private GameResultApiModel gameResult;
 	private List<GameActionApiModel> actions;
+	private List<String> players;
+	private String currentPlayer;
 
 	public List<GameActionApiModel> getActions() {
 		return actions;
+	}
+
+	public String getCurrentPlayer() {
+		return currentPlayer;
 	}
 
 	public GameGridApiModel getGameGrid() {
@@ -30,8 +36,16 @@ public class GameApiModel {
 		return id;
 	}
 
+	public List<String> getPlayers() {
+		return players;
+	}
+
 	public void setActions(List<GameActionApiModel> actions) {
 		this.actions = actions;
+	}
+
+	public void setCurrentPlayer(String currentPlayer) {
+		this.currentPlayer = currentPlayer;
 	}
 
 	public void setGameGrid(GameGridApiModel gameGrid) {
@@ -48,6 +62,10 @@ public class GameApiModel {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public void setPlayers(List<String> players) {
+		this.players = players;
 	}
 
 }

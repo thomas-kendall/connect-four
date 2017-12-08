@@ -35,9 +35,6 @@ public class GameService {
 		IGame game = GameFactory.createGame(getWebPlayer(), getAiPlayer());
 		gameMap.put(id, game);
 
-		// TODO: Change the game so it randomizes the first player and provides an API
-		// method to get the current player.
-
 		// Make the first move if AI is first
 		if (game.getCurrentPlayer().equals(getAiPlayer())) {
 			makeAiDrop(game, getAiPlayer());
@@ -115,6 +112,8 @@ public class GameService {
 		apiModel.setGameResult(new GameResultApiModel(game.getGameResult()));
 		apiModel.setActions(
 				game.getActions().stream().map(action -> new GameActionApiModel(action)).collect(Collectors.toList()));
+		apiModel.setPlayers(game.getPlayers());
+		apiModel.setCurrentPlayer(game.getCurrentPlayer());
 		return apiModel;
 	}
 

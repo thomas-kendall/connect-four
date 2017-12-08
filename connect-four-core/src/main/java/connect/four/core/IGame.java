@@ -18,9 +18,7 @@ public interface IGame {
 
 	GameGrid getGrid();
 
-	String getPlayer1();
-
-	String getPlayer2();
+	List<String> getPlayers();
 
 	GameStatus getStatus();
 }

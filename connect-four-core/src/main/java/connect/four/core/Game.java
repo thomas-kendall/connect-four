@@ -1,7 +1,9 @@
 package connect.four.core;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 import java.util.Random;
 
 import connect.four.core.exception.ActionNotAllowedException;
@@ -13,11 +15,7 @@ public class Game implements IGame {
 
 	private Random random = new Random();
 	private GameGrid grid;
-
-	// TODO: Convert to Queue<>
-	private String[] players;
-	private int currentPlayerIndex;
-
+	private Queue<String> players;
 	private GameStatus status;
 	private GameCheckers checkers;
 	private IGameResult gameResult;
@@ -26,8 +24,7 @@ public class Game implements IGame {
 	public Game(String... players) {
 		this.grid = new GameGrid();
 		this.checkers = new GameCheckers(players);
-		this.players = players;
-		currentPlayerIndex = random.nextInt(this.players.length);
+		this.players = randomlyLoadPlayers(players);
 		status = GameStatus.IN_PROGRESS;
 		gameResult = null;
 		actions = new ArrayList<>();
@@ -70,7 +67,7 @@ public class Game implements IGame {
 	public String getCurrentPlayer() {
 		String result = null;
 		if (getStatus() != GameStatus.COMPLETED) {
-			result = players[currentPlayerIndex];
+			result = players.peek();
 		}
 		return result;
 	}
@@ -86,13 +83,8 @@ public class Game implements IGame {
 	}
 
 	@Override
-	public String getPlayer1() {
-		return players[0];
-	}
-
-	@Override
-	public String getPlayer2() {
-		return players[1];
+	public List<String> getPlayers() {
+		return new ArrayList<>(players);
 	}
 
 	@Override
@@ -100,11 +92,20 @@ public class Game implements IGame {
 		return status;
 	}
 
-	private void setNextPlayer() {
-		currentPlayerIndex++;
-		if (currentPlayerIndex >= players.length) {
-			currentPlayerIndex = 0;
+	private Queue<String> randomlyLoadPlayers(String[] players) {
+		Queue<String> result = new LinkedList<>();
+		List<String> remainingPlayers = new ArrayList<>();
+		for (String player : players) {
+			remainingPlayers.add(player);
 		}
+		while (!remainingPlayers.isEmpty()) {
+			result.add(remainingPlayers.remove(random.nextInt(remainingPlayers.size())));
+		}
+		return result;
+	}
+
+	private void setNextPlayer() {
+		players.add(players.poll());
 	}
 
 	private void updateGameStatus() {
