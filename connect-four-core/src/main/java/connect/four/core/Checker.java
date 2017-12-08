@@ -1,13 +1,14 @@
 package connect.four.core;
 
+// TODO: Delete this class too
 public class Checker {
-	private IPlayer owner;
+	private String owner;
 
-	public Checker(IPlayer owner) {
+	public Checker(String owner) {
 		this.owner = owner;
 	}
 
-	public IPlayer getOwner() {
+	public String getOwner() {
 		return owner;
 	}
 }

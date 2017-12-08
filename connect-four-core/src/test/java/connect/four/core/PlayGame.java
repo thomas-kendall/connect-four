@@ -14,15 +14,15 @@ public class PlayGame {
 		new PlayGame();
 	}
 
-	private Player player1;
-	private Player player2;
-	private Player currentPlayer;
+	private String player1;
+	private String player2;
+	private String currentPlayer;
 	private Scanner scanner;
 
 	public PlayGame() throws ActionNotAllowedException, InvalidGridLocationException {
 		scanner = new Scanner(System.in);
-		player1 = new Player("Player 1", 'X');
-		player2 = new Player("Player 2", 'O');
+		player1 = "X";
+		player2 = "O";
 		currentPlayer = player1;
 
 		IGame game = GameFactory.createGame(player1, player2);
@@ -48,12 +48,12 @@ public class PlayGame {
 			System.out.println("Cat game!");
 		} else {
 			WinnerResult winnerResult = (WinnerResult) gameResult;
-			System.out.println(winnerResult.getWinningPlayer().getName() + " won.");
+			System.out.println(winnerResult.getWinningPlayer() + " won.");
 		}
 	}
 
 	private int getUserInputCol() {
-		System.out.println(currentPlayer.getName() + ", it's your turn. Choose a column: ");
+		System.out.println(currentPlayer + ", it's your turn. Choose a column: ");
 		return scanner.nextInt();
 	}
 

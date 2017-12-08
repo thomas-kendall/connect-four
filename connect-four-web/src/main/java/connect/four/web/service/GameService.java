@@ -13,15 +13,12 @@ import connect.four.core.GameFactory;
 import connect.four.core.GameProperties;
 import connect.four.core.GameStatus;
 import connect.four.core.IGame;
-import connect.four.core.IPlayer;
 import connect.four.core.exception.ActionNotAllowedException;
 import connect.four.core.exception.InvalidGridLocationException;
 import connect.four.web.api.model.GameActionApiModel;
 import connect.four.web.api.model.GameApiModel;
 import connect.four.web.api.model.GameGridApiModel;
 import connect.four.web.api.model.GameResultApiModel;
-import connect.four.web.game.model.AiPlayer;
-import connect.four.web.game.model.WebPlayer;
 
 @Service
 public class GameService {
@@ -35,19 +32,15 @@ public class GameService {
 
 	public GameApiModel createGame() {
 		int id = nextId++;
-		IPlayer player1 = new WebPlayer("X");
-		IPlayer player2 = new AiPlayer("O");
-		if (random.nextBoolean()) {
-			IPlayer p = player1;
-			player1 = player2;
-			player2 = p;
-		}
-		IGame game = GameFactory.createGame(player1, player2);
+		IGame game = GameFactory.createGame(getWebPlayer(), getAiPlayer());
 		gameMap.put(id, game);
 
+		// TODO: Change the game so it randomizes the first player and provides an API
+		// method to get the current player.
+
 		// Make the first move if AI is first
-		if (player1 instanceof AiPlayer) {
-			makeAiDrop(game, player1);
+		if (game.getCurrentPlayer().equals(getAiPlayer())) {
+			makeAiDrop(game, getAiPlayer());
 		}
 
 		return toApiModel(id, game);
@@ -60,12 +53,12 @@ public class GameService {
 		}
 
 		// Drop for the web player
-		WebPlayer webPlayer = getWebPlayer(game);
+		String webPlayer = getWebPlayer();
 		game.dropChecker(webPlayer, col);
 
 		// Drop for the AI player
 		if (game.getStatus() != GameStatus.COMPLETED) {
-			AiPlayer aiPlayer = getAiPlayer(game);
+			String aiPlayer = getAiPlayer();
 			makeAiDrop(game, aiPlayer);
 		}
 
@@ -77,8 +70,8 @@ public class GameService {
 		return toApiModel(id, game);
 	}
 
-	private AiPlayer getAiPlayer(IGame game) {
-		return (game.getPlayer1() instanceof AiPlayer) ? (AiPlayer) game.getPlayer1() : (AiPlayer) game.getPlayer2();
+	private String getAiPlayer() {
+		return "O";
 	}
 
 	public GameApiModel getGame(int id) {
@@ -95,11 +88,11 @@ public class GameService {
 				.collect(Collectors.toList());
 	}
 
-	private WebPlayer getWebPlayer(IGame game) {
-		return (game.getPlayer1() instanceof WebPlayer) ? (WebPlayer) game.getPlayer1() : (WebPlayer) game.getPlayer2();
+	private String getWebPlayer() {
+		return "X";
 	}
 
-	private void makeAiDrop(IGame game, IPlayer aiPlayer) {
+	private void makeAiDrop(IGame game, String aiPlayer) {
 		while (true) {
 			int col = random.nextInt(GameProperties.COLS);
 			try {

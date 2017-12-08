@@ -47,22 +47,13 @@ public class GameGrid {
 		return result;
 	}
 
-	private IPlayer getOwner(int row, int col) throws InvalidGridLocationException {
-		IPlayer owner = null;
+	public String getOwner(int row, int col) throws InvalidGridLocationException {
+		String owner = null;
 		Checker checker = getChecker(row, col);
 		if (checker != null) {
 			owner = checker.getOwner();
 		}
 		return owner;
-	}
-
-	public String getOwnerName(int row, int col) throws InvalidGridLocationException {
-		String ownerName = null;
-		IPlayer owner = getOwner(row, col);
-		if (owner != null) {
-			ownerName = owner.getName();
-		}
-		return ownerName;
 	}
 
 	public IGameResult getWinner() {
@@ -110,14 +101,14 @@ public class GameGrid {
 		if (row < GameProperties.TARGET - 1) {
 			return null;
 		}
-		IPlayer player = getOwner(row, col);
+		String player = getOwner(row, col);
 		if (player == null) {
 			return null;
 		}
 		locations[0] = new GridLocation(row, col);
 		for (int i = 1; i < GameProperties.TARGET; i++) {
 			locations[i] = new GridLocation(row - i, col + i);
-			IPlayer p = getOwner(locations[i].getRow(), locations[i].getCol());
+			String p = getOwner(locations[i].getRow(), locations[i].getCol());
 			if (!player.equals(p)) {
 				return null;
 			}
@@ -134,14 +125,14 @@ public class GameGrid {
 		if (row > GameProperties.ROWS - GameProperties.TARGET) {
 			return null;
 		}
-		IPlayer player = getOwner(row, col);
+		String player = getOwner(row, col);
 		if (player == null) {
 			return null;
 		}
 		locations[0] = new GridLocation(row, col);
 		for (int i = 1; i < GameProperties.TARGET; i++) {
 			locations[i] = new GridLocation(row + i, col + i);
-			IPlayer p = getOwner(locations[i].getRow(), locations[i].getCol());
+			String p = getOwner(locations[i].getRow(), locations[i].getCol());
 			if (!player.equals(p)) {
 				return null;
 			}
@@ -155,14 +146,14 @@ public class GameGrid {
 		if (col > GameProperties.COLS - GameProperties.TARGET) {
 			return null;
 		}
-		IPlayer player = getOwner(row, col);
+		String player = getOwner(row, col);
 		if (player == null) {
 			return null;
 		}
 		locations[0] = new GridLocation(row, col);
 		for (int i = 1; i < GameProperties.TARGET; i++) {
 			locations[i] = new GridLocation(row, col + i);
-			IPlayer p = getOwner(locations[i].getRow(), locations[i].getCol());
+			String p = getOwner(locations[i].getRow(), locations[i].getCol());
 			if (!player.equals(p)) {
 				return null;
 			}
@@ -176,14 +167,14 @@ public class GameGrid {
 		if (row > GameProperties.ROWS - GameProperties.TARGET) {
 			return null;
 		}
-		IPlayer player = getOwner(row, col);
+		String player = getOwner(row, col);
 		if (player == null) {
 			return null;
 		}
 		locations[0] = new GridLocation(row, col);
 		for (int i = 1; i < GameProperties.TARGET; i++) {
 			locations[i] = new GridLocation(row + i, col);
-			IPlayer p = getOwner(locations[i].getRow(), locations[i].getCol());
+			String p = getOwner(locations[i].getRow(), locations[i].getCol());
 			if (!player.equals(p)) {
 				return null;
 			}

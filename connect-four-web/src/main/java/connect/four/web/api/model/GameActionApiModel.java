@@ -8,7 +8,7 @@ public class GameActionApiModel {
 	private int row;
 
 	public GameActionApiModel(GameAction action) {
-		this.player = action.getPlayer().getName();
+		this.player = action.getPlayer();
 		this.col = action.getColumn();
 		this.row = action.getRow();
 	}

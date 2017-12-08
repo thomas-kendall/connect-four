@@ -9,16 +9,16 @@ public class GameCheckers {
 
 	private List<Checker> checkers;
 
-	public GameCheckers(IPlayer[] players) {
+	public GameCheckers(String[] players) {
 		checkers = new ArrayList<>();
 		for (int i = 0; i < GameProperties.CHECKERS_PER_PLAYER; i++) {
-			for (IPlayer player : players) {
+			for (String player : players) {
 				checkers.add(new Checker(player));
 			}
 		}
 	}
 
-	public boolean hasChecker(IPlayer player) {
+	public boolean hasChecker(String player) {
 		boolean result = false;
 		for (Checker checker : checkers) {
 			if (checker.getOwner().equals(player)) {
@@ -33,7 +33,7 @@ public class GameCheckers {
 		return checkers.isEmpty();
 	}
 
-	public Checker takeChecker(IPlayer player) throws ActionNotAllowedException {
+	public Checker takeChecker(String player) throws ActionNotAllowedException {
 		Checker result = null;
 
 		// Find a checker

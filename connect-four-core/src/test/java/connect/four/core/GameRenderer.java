@@ -26,8 +26,8 @@ public class GameRenderer {
 					if (checker == null) {
 						System.out.print('-');
 					} else {
-						Player player = (Player) checker.getOwner();
-						System.out.print(player.getToken());
+						String player = checker.getOwner();
+						System.out.print(player);
 					}
 				}
 				System.out.println();

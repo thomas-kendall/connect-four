@@ -1,13 +1,12 @@
 package connect.four.core.result;
 
 import connect.four.core.GridLocation;
-import connect.four.core.IPlayer;
 
 public class WinnerResult implements IGameResult {
-	private IPlayer winningPlayer;
+	private String winningPlayer;
 	private GridLocation[] gridLocations;
 
-	public WinnerResult(IPlayer winningPlayer, GridLocation[] gridLocations) {
+	public WinnerResult(String winningPlayer, GridLocation[] gridLocations) {
 		this.winningPlayer = winningPlayer;
 		this.gridLocations = gridLocations;
 	}
@@ -16,7 +15,7 @@ public class WinnerResult implements IGameResult {
 		return gridLocations;
 	}
 
-	public IPlayer getWinningPlayer() {
+	public String getWinningPlayer() {
 		return winningPlayer;
 	}
 }

@@ -8,17 +8,19 @@ import connect.four.core.result.IGameResult;
 
 public interface IGame {
 
-	void dropChecker(IPlayer player, int col) throws ActionNotAllowedException, InvalidGridLocationException;
+	void dropChecker(String player, int col) throws ActionNotAllowedException, InvalidGridLocationException;
 
 	List<GameAction> getActions();
+
+	String getCurrentPlayer();
 
 	IGameResult getGameResult();
 
 	GameGrid getGrid();
 
-	IPlayer getPlayer1();
+	String getPlayer1();
 
-	IPlayer getPlayer2();
+	String getPlayer2();
 
 	GameStatus getStatus();
 }

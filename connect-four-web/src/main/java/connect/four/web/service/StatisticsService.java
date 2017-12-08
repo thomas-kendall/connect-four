@@ -2,7 +2,6 @@ package connect.four.web.service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import org.springframework.stereotype.Service;
 
@@ -12,7 +11,6 @@ import connect.four.core.result.WinnerResult;
 @Service
 public class StatisticsService {
 
-	private Random random = new Random();
 	private List<Boolean> winsAndLosses = new ArrayList<>();
 
 	public Integer calculateDefaultWindowSize() {
@@ -43,22 +41,22 @@ public class StatisticsService {
 		return rollingWinRates;
 	}
 
-	private boolean[] generateData(int numberOfDataPoints, int windowSize) {
-		boolean[] winsAndLosses = new boolean[numberOfDataPoints];
-
-		// Insert data slightly randomized to follow a curve
-		double minWinRate = 0.1;
-		double maxWinRate = 0.9;
-		double slope = (maxWinRate - minWinRate) / winsAndLosses.length;
-		double slopeIntercept = minWinRate;
-		for (int i = 0; i < winsAndLosses.length; i++) {
-			double targetWinRate = slope * i + slopeIntercept;
-			boolean isWin = random.nextDouble() < targetWinRate;
-			winsAndLosses[i] = isWin;
-		}
-
-		return winsAndLosses;
-	}
+	// private boolean[] generateData(int numberOfDataPoints, int windowSize) {
+	// boolean[] winsAndLosses = new boolean[numberOfDataPoints];
+	//
+	// // Insert data slightly randomized to follow a curve
+	// double minWinRate = 0.1;
+	// double maxWinRate = 0.9;
+	// double slope = (maxWinRate - minWinRate) / winsAndLosses.length;
+	// double slopeIntercept = minWinRate;
+	// for (int i = 0; i < winsAndLosses.length; i++) {
+	// double targetWinRate = slope * i + slopeIntercept;
+	// boolean isWin = random.nextDouble() < targetWinRate;
+	// winsAndLosses[i] = isWin;
+	// }
+	//
+	// return winsAndLosses;
+	// }
 
 	private List<Boolean> getWindow(List<Boolean> items, int windowSize, int index) {
 		List<Boolean> window = new ArrayList<>();
@@ -73,7 +71,7 @@ public class StatisticsService {
 	public void onGameFinished(IGame game) {
 		if (game.getGameResult() instanceof WinnerResult) {
 			WinnerResult result = (WinnerResult) game.getGameResult();
-			winsAndLosses.add(result.getWinningPlayer().getName().equals("O"));
+			winsAndLosses.add(result.getWinningPlayer().equals("O"));
 		}
 	}
 }

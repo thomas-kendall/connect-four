@@ -13,7 +13,7 @@ public class GameResultApiModel {
 			winner = null;
 		} else if (gameResult instanceof WinnerResult) {
 			WinnerResult wr = (WinnerResult) gameResult;
-			winner = wr.getWinningPlayer().getName();
+			winner = wr.getWinningPlayer();
 		}
 	}
 

@@ -2,6 +2,7 @@ package connect.four.core;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import connect.four.core.exception.ActionNotAllowedException;
 import connect.four.core.exception.InvalidGridLocationException;
@@ -10,26 +11,30 @@ import connect.four.core.result.NoWinnerResult;
 
 public class Game implements IGame {
 
+	private Random random = new Random();
 	private GameGrid grid;
-	private IPlayer[] players;
+
+	// TODO: Convert to Queue<>
+	private String[] players;
 	private int currentPlayerIndex;
+
 	private GameStatus status;
 	private GameCheckers checkers;
 	private IGameResult gameResult;
 	private List<GameAction> actions;
 
-	public Game(IPlayer... players) {
+	public Game(String... players) {
 		this.grid = new GameGrid();
 		this.checkers = new GameCheckers(players);
 		this.players = players;
-		currentPlayerIndex = 0;
+		currentPlayerIndex = random.nextInt(this.players.length);
 		status = GameStatus.IN_PROGRESS;
 		gameResult = null;
 		actions = new ArrayList<>();
 	}
 
 	@Override
-	public void dropChecker(IPlayer player, int col) throws ActionNotAllowedException, InvalidGridLocationException {
+	public void dropChecker(String player, int col) throws ActionNotAllowedException, InvalidGridLocationException {
 		// Validate game status
 		if (status == GameStatus.COMPLETED) {
 			throw new ActionNotAllowedException("The game is already completed.");
@@ -37,7 +42,7 @@ public class Game implements IGame {
 
 		// Validate player
 		if (player != getCurrentPlayer()) {
-			throw new ActionNotAllowedException("It is not the turn for " + player.getName());
+			throw new ActionNotAllowedException("It is not the turn for " + player);
 		}
 
 		// Drop checker
@@ -61,8 +66,13 @@ public class Game implements IGame {
 		return actions;
 	}
 
-	private IPlayer getCurrentPlayer() {
-		return players[currentPlayerIndex];
+	@Override
+	public String getCurrentPlayer() {
+		String result = null;
+		if (getStatus() != GameStatus.COMPLETED) {
+			result = players[currentPlayerIndex];
+		}
+		return result;
 	}
 
 	@Override
@@ -76,12 +86,12 @@ public class Game implements IGame {
 	}
 
 	@Override
-	public IPlayer getPlayer1() {
+	public String getPlayer1() {
 		return players[0];
 	}
 
 	@Override
-	public IPlayer getPlayer2() {
+	public String getPlayer2() {
 		return players[1];
 	}
 
