@@ -1,7 +1,6 @@
 package connect.four.web.controller;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -9,8 +8,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import connect.four.web.api.model.MatchResultRates;
 import connect.four.web.api.model.RollingAverageApiModel;
-import connect.four.web.api.model.WinRateDataPointApiModel;
 import connect.four.web.service.StatisticsService;
 
 @RestController
@@ -20,16 +19,20 @@ public class StatisticsController {
 	@Autowired
 	private StatisticsService statisticsService;
 
+	@RequestMapping(value = "/generate-data", method = RequestMethod.GET)
+	public void generateData() {
+		statisticsService.generateData(1000, 30);
+	}
+
 	@RequestMapping(value = "/rolling-average", method = RequestMethod.GET)
 	public RollingAverageApiModel getRollingAverage(@RequestParam(required = false) Integer windowSize) {
 		if (windowSize == null || windowSize < 1) {
 			// use a default window size
 			windowSize = statisticsService.calculateDefaultWindowSize();
 		}
-		List<Double> rollingWinRates = statisticsService.calculateWinRateRollingAverage(windowSize);
+		List<MatchResultRates> rollingRates = statisticsService.calculateRatesRollingAverage(windowSize);
 
-		RollingAverageApiModel result = new RollingAverageApiModel(windowSize,
-				rollingWinRates.stream().map(d -> new WinRateDataPointApiModel(d)).collect(Collectors.toList()));
+		RollingAverageApiModel result = new RollingAverageApiModel(windowSize, rollingRates);
 		return result;
 	}
 

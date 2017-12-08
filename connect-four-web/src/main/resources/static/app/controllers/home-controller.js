@@ -10,12 +10,8 @@ angular.module('app').controller('homeController', ['$scope', '$location', 'stat
 			
 			var data = [];
 			var labels = [];
-			for(var i = 0; i < apiModel.dataPoints.length; i++) {
+			for(var i = 0; i < apiModel.winRates.length; i++) {
 				labels.push(i + 1);
-				data.push({
-					x: i + 1,
-					y: apiModel.dataPoints[i].winRate
-				});
 			}
 			
 			var ctx = document.getElementById('rolling-win-rate-chart').getContext('2d');
@@ -23,12 +19,26 @@ angular.module('app').controller('homeController', ['$scope', '$location', 'stat
 			    type: 'line',
 			    data: {
 				    labels: labels,
-			    	datasets: [{
-			    		label: 'Win Rate',
-			    		borderColor: '#00F',
-			    		data: data,
-			    		backgroundColor: '#DDF'
-			    	}],
+			    	datasets: [
+			    		{
+				    		label: 'Win Rate',
+				    		borderColor: '#0F0',
+				    		data: apiModel.winRates,
+				    		fill: false
+				    	},
+			    		{
+				    		label: 'Loss Rate',
+				    		borderColor: '#F00',
+				    		data: apiModel.lossRates,
+				    		fill: false
+				    	},
+			    		{
+				    		label: 'Tie Rate',
+				    		borderColor: '#00F',
+				    		data: apiModel.tieRates,
+				    		fill: false
+				    	}
+			    	],
 			    },
 			    options: {
 			    	responsive: false,
@@ -40,6 +50,11 @@ angular.module('app').controller('homeController', ['$scope', '$location', 'stat
 			    				suggestedMax: 1
 			    			}
 			    		}]
+			    	},
+			    	elements: {
+			    		point: {
+			    			radius: 0
+			    		}
 			    	}
 			    }
 			});
