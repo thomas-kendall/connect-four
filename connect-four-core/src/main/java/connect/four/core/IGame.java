@@ -12,6 +12,10 @@ public interface IGame {
 
 	List<GameAction> getActions();
 
+	List<Integer> getAvailableColumns();
+
+	List<GridLocation> getAvailableLocations();
+
 	String getCurrentPlayer();
 
 	IGameResult getGameResult();

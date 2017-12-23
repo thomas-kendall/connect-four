@@ -16,7 +16,7 @@ public class GameRenderer {
 	public static void renderGame(IGame game) {
 		try {
 			// X|O|O|-|-|-|-
-			for (int row = GameProperties.ROWS - 1; row >= 0; row--) {
+			for (int row = GameProperties.TOP_ROW_INDEX; row >= 0; row--) {
 				for (int col = 0; col < GameProperties.COLS; col++) {
 					if (col > 0) {
 						System.out.print('|');

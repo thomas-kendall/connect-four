@@ -64,6 +64,16 @@ public class Game implements IGame {
 	}
 
 	@Override
+	public List<Integer> getAvailableColumns() {
+		return grid.getAvailableColumns();
+	}
+
+	@Override
+	public List<GridLocation> getAvailableLocations() {
+		return grid.getAvailableLocations();
+	}
+
+	@Override
 	public String getCurrentPlayer() {
 		String result = null;
 		if (getStatus() != GameStatus.COMPLETED) {

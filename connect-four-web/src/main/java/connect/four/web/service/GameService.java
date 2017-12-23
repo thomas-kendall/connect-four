@@ -3,14 +3,14 @@ package connect.four.web.service;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import connect.four.bot.BasicLogicBot;
+import connect.four.bot.IConnectFourBot;
 import connect.four.core.GameFactory;
-import connect.four.core.GameProperties;
 import connect.four.core.GameStatus;
 import connect.four.core.IGame;
 import connect.four.core.exception.ActionNotAllowedException;
@@ -26,9 +26,10 @@ public class GameService {
 	@Autowired
 	private StatisticsService statisticsService;
 
+	private IConnectFourBot robotPlayer = new BasicLogicBot(getAiPlayer(), getWebPlayer());
+
 	private int nextId = 1;
 	private Map<Integer, IGame> gameMap = new HashMap<>();
-	private Random random = new Random();
 
 	public GameApiModel createGame() {
 		int id = nextId++;
@@ -91,7 +92,7 @@ public class GameService {
 
 	private void makeAiDrop(IGame game, String aiPlayer) {
 		while (true) {
-			int col = random.nextInt(GameProperties.COLS);
+			int col = robotPlayer.makeDecision(game);
 			try {
 				game.dropChecker(aiPlayer, col);
 			} catch (ActionNotAllowedException | InvalidGridLocationException e) {

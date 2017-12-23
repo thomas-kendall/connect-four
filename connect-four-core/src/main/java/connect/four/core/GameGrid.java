@@ -1,5 +1,8 @@
 package connect.four.core;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import connect.four.core.exception.InvalidGridLocationException;
 import connect.four.core.result.IGameResult;
 import connect.four.core.result.WinnerResult;
@@ -28,6 +31,31 @@ public class GameGrid {
 		}
 
 		grid[openRow][col] = checker;
+	}
+
+	public List<Integer> getAvailableColumns() {
+		List<Integer> availableColumns = new ArrayList<>();
+		for (int col = 0; col < GameProperties.COLS; col++) {
+			try {
+				if (getOwner(GameProperties.TOP_ROW_INDEX, col) == null) {
+					availableColumns.add(col);
+				}
+			} catch (InvalidGridLocationException e) {
+				throw new RuntimeException(e);
+			}
+		}
+		return availableColumns;
+	}
+
+	public List<GridLocation> getAvailableLocations() {
+		List<GridLocation> availableLocations = new ArrayList<>();
+		for (int col = 0; col < GameProperties.COLS; col++) {
+			int rowPlayed = getLowestRowPlayed(col);
+			if (rowPlayed != GameProperties.TOP_ROW_INDEX) {
+				availableLocations.add(new GridLocation(rowPlayed + 1, col));
+			}
+		}
+		return availableLocations;
 	}
 
 	public Checker getChecker(int row, int col) throws InvalidGridLocationException {
