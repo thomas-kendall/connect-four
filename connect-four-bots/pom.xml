@@ -4,8 +4,12 @@
 	<groupId>connect.four</groupId>
 	<artifactId>connect-four-bots</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<dependencies>
+	<properties>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
+	</properties>
 
+	<dependencies>
 		<dependency>
 			<groupId>connect.four</groupId>
 			<artifactId>connect-four-core</artifactId>
@@ -18,6 +22,5 @@
 		    <artifactId>encog-core</artifactId>
 		    <version>3.4</version>
 		</dependency>
-		
 	</dependencies>
 </project>
