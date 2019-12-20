@@ -15,7 +15,7 @@ public class GridSearcher {
 		int immediateCount = 0;
 		for (int col = location.getCol(), row = location.getRow() - 1; row > -1; row--) {
 			try {
-				String gridToken = grid.getOwner(row, col);
+				String gridToken = grid.getChecker(row, col);
 				if (token.equals(gridToken)) {
 					immediateCount++;
 				} else {
@@ -29,7 +29,7 @@ public class GridSearcher {
 		int potentialCount = 0;
 		for (int col = location.getCol(), row = location.getRow() - 1; row > -1; row--) {
 			try {
-				String gridToken = grid.getOwner(row, col);
+				String gridToken = grid.getChecker(row, col);
 				if (gridToken == null || token.equals(gridToken)) {
 					potentialCount++;
 				} else {
@@ -49,7 +49,7 @@ public class GridSearcher {
 		int immediateCount = 0;
 		for (int col = location.getCol() - 1, row = location.getRow() - 1; col > -1 && row > -1; col--, row--) {
 			try {
-				String gridToken = grid.getOwner(row, col);
+				String gridToken = grid.getChecker(row, col);
 				if (token.equals(gridToken)) {
 					immediateCount++;
 				} else {
@@ -63,7 +63,7 @@ public class GridSearcher {
 		int potentialCount = 0;
 		for (int col = location.getCol() - 1, row = location.getRow() - 1; col > -1 && row > -1; col--, row--) {
 			try {
-				String gridToken = grid.getOwner(row, col);
+				String gridToken = grid.getChecker(row, col);
 				if (gridToken == null || token.equals(gridToken)) {
 					potentialCount++;
 				} else {
@@ -84,7 +84,7 @@ public class GridSearcher {
 		for (int col = location.getCol() + 1, row = location.getRow() - 1; col < GameProperties.COLS
 				&& row > -1; col++, row--) {
 			try {
-				String gridToken = grid.getOwner(row, col);
+				String gridToken = grid.getChecker(row, col);
 				if (token.equals(gridToken)) {
 					immediateCount++;
 				} else {
@@ -99,7 +99,7 @@ public class GridSearcher {
 		for (int col = location.getCol() + 1, row = location.getRow() - 1; col < GameProperties.COLS
 				&& row > -1; col++, row--) {
 			try {
-				String gridToken = grid.getOwner(row, col);
+				String gridToken = grid.getChecker(row, col);
 				if (gridToken == null || token.equals(gridToken)) {
 					potentialCount++;
 				} else {
@@ -120,7 +120,7 @@ public class GridSearcher {
 		for (int col = location.getCol() - 1, row = location.getRow() + 1; col > -1
 				&& row < GameProperties.ROWS; col--, row++) {
 			try {
-				String gridToken = grid.getOwner(row, col);
+				String gridToken = grid.getChecker(row, col);
 				if (token.equals(gridToken)) {
 					immediateCount++;
 				} else {
@@ -135,7 +135,7 @@ public class GridSearcher {
 		for (int col = location.getCol() - 1, row = location.getRow() + 1; col > -1
 				&& row < GameProperties.ROWS; col--, row++) {
 			try {
-				String gridToken = grid.getOwner(row, col);
+				String gridToken = grid.getChecker(row, col);
 				if (gridToken == null || token.equals(gridToken)) {
 					potentialCount++;
 				} else {
@@ -156,7 +156,7 @@ public class GridSearcher {
 		for (int col = location.getCol() + 1, row = location.getRow() + 1; col < GameProperties.COLS
 				&& row < GameProperties.ROWS; col++, row++) {
 			try {
-				String gridToken = grid.getOwner(row, col);
+				String gridToken = grid.getChecker(row, col);
 				if (token.equals(gridToken)) {
 					immediateCount++;
 				} else {
@@ -171,7 +171,7 @@ public class GridSearcher {
 		for (int col = location.getCol() + 1, row = location.getRow() + 1; col < GameProperties.COLS
 				&& row < GameProperties.ROWS; col++, row++) {
 			try {
-				String gridToken = grid.getOwner(row, col);
+				String gridToken = grid.getChecker(row, col);
 				if (gridToken == null || token.equals(gridToken)) {
 					potentialCount++;
 				} else {
@@ -190,7 +190,7 @@ public class GridSearcher {
 		int immediateCount = 0;
 		for (int col = location.getCol() - 1, row = location.getRow(); col > -1; col--) {
 			try {
-				String gridToken = grid.getOwner(row, col);
+				String gridToken = grid.getChecker(row, col);
 				if (token.equals(gridToken)) {
 					immediateCount++;
 				} else {
@@ -204,7 +204,7 @@ public class GridSearcher {
 		int potentialCount = 0;
 		for (int col = location.getCol() - 1, row = location.getRow(); col > -1; col--) {
 			try {
-				String gridToken = grid.getOwner(row, col);
+				String gridToken = grid.getChecker(row, col);
 				if (gridToken == null || token.equals(gridToken)) {
 					potentialCount++;
 				} else {
@@ -246,7 +246,7 @@ public class GridSearcher {
 		int immediateCount = 0;
 		for (int col = location.getCol() + 1, row = location.getRow(); col < GameProperties.COLS; col++) {
 			try {
-				String gridToken = grid.getOwner(row, col);
+				String gridToken = grid.getChecker(row, col);
 				if (token.equals(gridToken)) {
 					immediateCount++;
 				} else {
@@ -260,7 +260,7 @@ public class GridSearcher {
 		int potentialCount = 0;
 		for (int col = location.getCol() + 1, row = location.getRow(); col < GameProperties.COLS; col++) {
 			try {
-				String gridToken = grid.getOwner(row, col);
+				String gridToken = grid.getChecker(row, col);
 				if (gridToken == null || token.equals(gridToken)) {
 					potentialCount++;
 				} else {

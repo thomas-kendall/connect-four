@@ -3,12 +3,11 @@ package connect.four.core;
 import java.util.List;
 
 import connect.four.core.exception.ActionNotAllowedException;
-import connect.four.core.exception.InvalidGridLocationException;
 import connect.four.core.result.IGameResult;
 
 public interface IGame {
 
-	void dropChecker(String player, int col) throws ActionNotAllowedException, InvalidGridLocationException;
+	void dropChecker(String player, int col) throws ActionNotAllowedException;
 
 	List<GameAction> getActions();
 
@@ -17,6 +16,8 @@ public interface IGame {
 	List<GridLocation> getAvailableLocations();
 
 	String getCurrentPlayer();
+
+	List<GameGrid> getGameGridHistory();
 
 	IGameResult getGameResult();
 

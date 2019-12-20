@@ -5,11 +5,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import javax.annotation.PostConstruct;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import connect.four.bot.BasicLogicBot;
 import connect.four.bot.IConnectFourBot;
+import connect.four.bot.MachineLearningBot;
 import connect.four.core.GameFactory;
 import connect.four.core.GameStatus;
 import connect.four.core.IGame;
@@ -26,7 +28,10 @@ public class GameService {
 	@Autowired
 	private StatisticsService statisticsService;
 
-	private IConnectFourBot robotPlayer = new BasicLogicBot(getAiPlayer(), getWebPlayer());
+	@Autowired
+	private MachineLearningService machineLearningService;
+
+	private IConnectFourBot robotPlayer;
 
 	private int nextId = 1;
 	private Map<Integer, IGame> gameMap = new HashMap<>();
@@ -44,7 +49,7 @@ public class GameService {
 		return toApiModel(id, game);
 	}
 
-	public GameApiModel dropChecker(int id, int col) throws ActionNotAllowedException, InvalidGridLocationException {
+	public GameApiModel dropChecker(int id, int col) throws ActionNotAllowedException {
 		IGame game = gameMap.get(id);
 		if (game == null) {
 			throw new IllegalArgumentException("Game " + id + " does not exist.");
@@ -88,6 +93,11 @@ public class GameService {
 
 	private String getWebPlayer() {
 		return "X";
+	}
+
+	@PostConstruct
+	public void init() {
+		robotPlayer = new MachineLearningBot(getAiPlayer(), machineLearningService.getNeuralNetwork());
 	}
 
 	private void makeAiDrop(IGame game, String aiPlayer) {

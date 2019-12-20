@@ -5,17 +5,29 @@ import java.util.List;
 
 import connect.four.core.exception.InvalidGridLocationException;
 import connect.four.core.result.IGameResult;
+import connect.four.core.result.NoWinnerResult;
 import connect.four.core.result.WinnerResult;
 
 public class GameGrid {
 
-	private Checker[][] grid;
+	private String[][] grid;
 
 	public GameGrid() {
-		grid = new Checker[GameProperties.ROWS][GameProperties.COLS];
+		grid = new String[GameProperties.ROWS][GameProperties.COLS];
 	}
 
-	public void dropChecker(int col, Checker checker) throws InvalidGridLocationException {
+	@Override
+	public GameGrid clone() {
+		GameGrid clone = new GameGrid();
+		for (int row = 0; row < GameProperties.ROWS; row++) {
+			for (int col = 0; col < GameProperties.COLS; col++) {
+				clone.grid[row][col] = grid[row][col];
+			}
+		}
+		return clone;
+	}
+
+	public void dropChecker(int col, String playerToken) throws InvalidGridLocationException {
 		validateCol(col);
 
 		// Find the open row
@@ -30,14 +42,14 @@ public class GameGrid {
 			throw new InvalidGridLocationException("No openings in col " + col);
 		}
 
-		grid[openRow][col] = checker;
+		grid[openRow][col] = playerToken;
 	}
 
 	public List<Integer> getAvailableColumns() {
 		List<Integer> availableColumns = new ArrayList<>();
 		for (int col = 0; col < GameProperties.COLS; col++) {
 			try {
-				if (getOwner(GameProperties.TOP_ROW_INDEX, col) == null) {
+				if (getChecker(GameProperties.TOP_ROW_INDEX, col) == null) {
 					availableColumns.add(col);
 				}
 			} catch (InvalidGridLocationException e) {
@@ -58,9 +70,51 @@ public class GameGrid {
 		return availableLocations;
 	}
 
-	public Checker getChecker(int row, int col) throws InvalidGridLocationException {
+	public String getChecker(int row, int col) {
 		validateRowCol(row, col);
 		return grid[row][col];
+	}
+
+	public IGameResult getGameResult() {
+		IGameResult result = null;
+		for (int row = 0; row < GameProperties.ROWS; row++) {
+			for (int col = 0; col < GameProperties.COLS; col++) {
+				// Find horizontal
+				result = getWinnerHorizontal(row, col);
+				if (result != null) {
+					return result;
+				}
+
+				// Find vertical
+				result = getWinnerVertical(row, col);
+				if (result != null) {
+					return result;
+				}
+
+				// Find diagonal (down-right)
+				result = getWinnerDiagonalDownRight(row, col);
+				if (result != null) {
+					return result;
+				}
+
+				// Find diagonal (up-right)
+				result = getWinnerDiagonalUpRight(row, col);
+				if (result != null) {
+					return result;
+				}
+			}
+		}
+
+		// Are there any available spaces?
+		for (int row = 0; row < GameProperties.ROWS; row++) {
+			for (int col = 0; col < GameProperties.COLS; col++) {
+				if (grid[row][col] == null) {
+					return null;
+				}
+			}
+		}
+
+		return new NoWinnerResult();
 	}
 
 	public int getLowestRowPlayed(int col) {
@@ -75,52 +129,6 @@ public class GameGrid {
 		return result;
 	}
 
-	public String getOwner(int row, int col) throws InvalidGridLocationException {
-		String owner = null;
-		Checker checker = getChecker(row, col);
-		if (checker != null) {
-			owner = checker.getOwner();
-		}
-		return owner;
-	}
-
-	public IGameResult getWinner() {
-		IGameResult result = null;
-		try {
-			for (int row = 0; row < GameProperties.ROWS; row++) {
-				for (int col = 0; col < GameProperties.COLS; col++) {
-					// Find horizontal
-					result = getWinnerHorizontal(row, col);
-					if (result != null) {
-						return result;
-					}
-
-					// Find vertical
-					result = getWinnerVertical(row, col);
-					if (result != null) {
-						return result;
-					}
-
-					// Find diagonal (down-right)
-					result = getWinnerDiagonalDownRight(row, col);
-					if (result != null) {
-						return result;
-					}
-
-					// Find diagonal (up-right)
-					result = getWinnerDiagonalUpRight(row, col);
-					if (result != null) {
-						return result;
-					}
-				}
-			}
-		} catch (InvalidGridLocationException ex) {
-			// This should never happen
-			throw new RuntimeException(ex);
-		}
-		return null;
-	}
-
 	private IGameResult getWinnerDiagonalDownRight(int row, int col) throws InvalidGridLocationException {
 		GridLocation[] locations = new GridLocation[GameProperties.TARGET];
 		if (col > GameProperties.COLS - GameProperties.TARGET) {
@@ -129,14 +137,14 @@ public class GameGrid {
 		if (row < GameProperties.TARGET - 1) {
 			return null;
 		}
-		String player = getOwner(row, col);
+		String player = getChecker(row, col);
 		if (player == null) {
 			return null;
 		}
 		locations[0] = new GridLocation(row, col);
 		for (int i = 1; i < GameProperties.TARGET; i++) {
 			locations[i] = new GridLocation(row - i, col + i);
-			String p = getOwner(locations[i].getRow(), locations[i].getCol());
+			String p = getChecker(locations[i].getRow(), locations[i].getCol());
 			if (!player.equals(p)) {
 				return null;
 			}
@@ -153,14 +161,14 @@ public class GameGrid {
 		if (row > GameProperties.ROWS - GameProperties.TARGET) {
 			return null;
 		}
-		String player = getOwner(row, col);
+		String player = getChecker(row, col);
 		if (player == null) {
 			return null;
 		}
 		locations[0] = new GridLocation(row, col);
 		for (int i = 1; i < GameProperties.TARGET; i++) {
 			locations[i] = new GridLocation(row + i, col + i);
-			String p = getOwner(locations[i].getRow(), locations[i].getCol());
+			String p = getChecker(locations[i].getRow(), locations[i].getCol());
 			if (!player.equals(p)) {
 				return null;
 			}
@@ -174,14 +182,14 @@ public class GameGrid {
 		if (col > GameProperties.COLS - GameProperties.TARGET) {
 			return null;
 		}
-		String player = getOwner(row, col);
+		String player = getChecker(row, col);
 		if (player == null) {
 			return null;
 		}
 		locations[0] = new GridLocation(row, col);
 		for (int i = 1; i < GameProperties.TARGET; i++) {
 			locations[i] = new GridLocation(row, col + i);
-			String p = getOwner(locations[i].getRow(), locations[i].getCol());
+			String p = getChecker(locations[i].getRow(), locations[i].getCol());
 			if (!player.equals(p)) {
 				return null;
 			}
@@ -195,14 +203,14 @@ public class GameGrid {
 		if (row > GameProperties.ROWS - GameProperties.TARGET) {
 			return null;
 		}
-		String player = getOwner(row, col);
+		String player = getChecker(row, col);
 		if (player == null) {
 			return null;
 		}
 		locations[0] = new GridLocation(row, col);
 		for (int i = 1; i < GameProperties.TARGET; i++) {
 			locations[i] = new GridLocation(row + i, col);
-			String p = getOwner(locations[i].getRow(), locations[i].getCol());
+			String p = getChecker(locations[i].getRow(), locations[i].getCol());
 			if (!player.equals(p)) {
 				return null;
 			}

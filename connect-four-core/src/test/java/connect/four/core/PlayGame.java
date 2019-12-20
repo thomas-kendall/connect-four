@@ -3,14 +3,13 @@ package connect.four.core;
 import java.util.Scanner;
 
 import connect.four.core.exception.ActionNotAllowedException;
-import connect.four.core.exception.InvalidGridLocationException;
 import connect.four.core.result.IGameResult;
 import connect.four.core.result.NoWinnerResult;
 import connect.four.core.result.WinnerResult;
 
 public class PlayGame {
 
-	public static void main(String[] args) throws ActionNotAllowedException, InvalidGridLocationException {
+	public static void main(String[] args) throws ActionNotAllowedException {
 		new PlayGame();
 	}
 
@@ -19,7 +18,7 @@ public class PlayGame {
 	private String currentPlayer;
 	private Scanner scanner;
 
-	public PlayGame() throws ActionNotAllowedException, InvalidGridLocationException {
+	public PlayGame() throws ActionNotAllowedException {
 		scanner = new Scanner(System.in);
 		player1 = "X";
 		player2 = "O";

@@ -21,13 +21,11 @@ public class GameRenderer {
 					if (col > 0) {
 						System.out.print('|');
 					}
-					Checker checker;
-					checker = game.getGrid().getChecker(row, col);
+					String checker = game.getGrid().getChecker(row, col);
 					if (checker == null) {
 						System.out.print('-');
 					} else {
-						String player = checker.getOwner();
-						System.out.print(player);
+						System.out.print(checker);
 					}
 				}
 				System.out.println();

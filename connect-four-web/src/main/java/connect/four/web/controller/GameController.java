@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import connect.four.core.exception.ActionNotAllowedException;
-import connect.four.core.exception.InvalidGridLocationException;
 import connect.four.web.api.model.DropCheckerRequestApiModel;
 import connect.four.web.api.model.GameApiModel;
 import connect.four.web.service.GameService;
@@ -30,8 +29,7 @@ public class GameController {
 
 	@RequestMapping(value = "/{gameId}/checkers", method = RequestMethod.POST)
 	public GameApiModel dropChecker(@PathVariable int gameId,
-			@RequestBody DropCheckerRequestApiModel dropCheckerRequestApiModel)
-			throws ActionNotAllowedException, InvalidGridLocationException {
+			@RequestBody DropCheckerRequestApiModel dropCheckerRequestApiModel) throws ActionNotAllowedException {
 		GameApiModel apiModel = gameService.dropChecker(gameId, dropCheckerRequestApiModel.getCol());
 		return apiModel;
 	}

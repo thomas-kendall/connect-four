@@ -7,9 +7,7 @@ import java.util.Queue;
 import java.util.Random;
 
 import connect.four.core.exception.ActionNotAllowedException;
-import connect.four.core.exception.InvalidGridLocationException;
 import connect.four.core.result.IGameResult;
-import connect.four.core.result.NoWinnerResult;
 
 public class Game implements IGame {
 
@@ -17,21 +15,21 @@ public class Game implements IGame {
 	private GameGrid grid;
 	private Queue<String> players;
 	private GameStatus status;
-	private GameCheckers checkers;
 	private IGameResult gameResult;
 	private List<GameAction> actions;
+	private List<GameGrid> gridHistory;
 
 	public Game(String... players) {
 		this.grid = new GameGrid();
-		this.checkers = new GameCheckers(players);
 		this.players = randomlyLoadPlayers(players);
 		status = GameStatus.IN_PROGRESS;
 		gameResult = null;
 		actions = new ArrayList<>();
+		gridHistory = new ArrayList<>();
 	}
 
 	@Override
-	public void dropChecker(String player, int col) throws ActionNotAllowedException, InvalidGridLocationException {
+	public void dropChecker(String player, int col) throws ActionNotAllowedException {
 		// Validate game status
 		if (status == GameStatus.COMPLETED) {
 			throw new ActionNotAllowedException("The game is already completed.");
@@ -43,8 +41,7 @@ public class Game implements IGame {
 		}
 
 		// Drop checker
-		Checker checker = checkers.takeChecker(player);
-		grid.dropChecker(col, checker);
+		grid.dropChecker(col, player);
 
 		// Store the action
 		int rowPlayed = grid.getLowestRowPlayed(col);
@@ -56,6 +53,9 @@ public class Game implements IGame {
 
 		// Set next player
 		setNextPlayer();
+
+		// Save to grid history
+		gridHistory.add(grid.clone());
 	}
 
 	@Override
@@ -80,6 +80,11 @@ public class Game implements IGame {
 			result = players.peek();
 		}
 		return result;
+	}
+
+	@Override
+	public List<GameGrid> getGameGridHistory() {
+		return gridHistory;
 	}
 
 	@Override
@@ -120,15 +125,9 @@ public class Game implements IGame {
 
 	private void updateGameStatus() {
 		// Is there a winner?
-		gameResult = grid.getWinner();
+		gameResult = grid.getGameResult();
 		if (gameResult != null) {
 			status = GameStatus.COMPLETED;
-		}
-
-		// Are we out of checkers?
-		else if (checkers.isEmpty()) {
-			status = GameStatus.COMPLETED;
-			gameResult = new NoWinnerResult();
 		}
 	}
 

@@ -35,5 +35,4 @@ public class StatisticsController {
 		RollingAverageApiModel result = new RollingAverageApiModel(windowSize, rollingRates);
 		return result;
 	}
-
 }

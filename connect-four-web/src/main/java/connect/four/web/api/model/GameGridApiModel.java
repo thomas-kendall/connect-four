@@ -12,7 +12,7 @@ public class GameGridApiModel {
 			rows = new String[GameProperties.ROWS][GameProperties.COLS];
 			for (int row = 0; row < GameProperties.ROWS; row++) {
 				for (int col = 0; col < GameProperties.COLS; col++) {
-					rows[row][col] = game.getGrid().getOwner(row, col);
+					rows[row][col] = game.getGrid().getChecker(row, col);
 				}
 			}
 		} catch (InvalidGridLocationException e) {
