@@ -1,5 +1,6 @@
 package connect.four.bot;
 
+import java.io.ByteArrayOutputStream;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +14,7 @@ import org.encog.ml.data.basic.BasicMLData;
 import org.encog.ml.data.basic.BasicMLDataPair;
 import org.encog.ml.data.basic.BasicMLDataSet;
 import org.encog.neural.networks.BasicNetwork;
+import org.encog.neural.networks.PersistBasicNetwork;
 import org.encog.neural.networks.layers.BasicLayer;
 import org.encog.neural.networks.training.propagation.Propagation;
 import org.encog.neural.networks.training.propagation.back.Backpropagation;
@@ -51,6 +53,18 @@ public class ConnectFourNeuralNetwork {
 		network.addLayer(new BasicLayer(new ActivationSigmoid(), false, 3));
 		network.getStructure().finalizeStructure();
 		network.reset();
+
+		System.out.println("Network weights:");
+		// System.out.println(network.dumpWeightsVerbose());
+		PersistBasicNetwork persistor = new PersistBasicNetwork();
+		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+		persistor.save(outputStream, network);
+		String networkAsString = new String(outputStream.toByteArray());
+		System.out.println(networkAsString);
+	}
+
+	public BasicNetwork getBasicNetwork() {
+		return network;
 	}
 
 	// TODO: Store the training set as an MLDataSet so we don't have to convert it

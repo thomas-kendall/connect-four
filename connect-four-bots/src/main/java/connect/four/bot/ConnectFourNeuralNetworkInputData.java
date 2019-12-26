@@ -4,7 +4,6 @@ import java.util.Arrays;
 
 import connect.four.core.GameGrid;
 import connect.four.core.GameProperties;
-import connect.four.core.exception.InvalidGridLocationException;
 
 public class ConnectFourNeuralNetworkInputData {
 	private static final double UNOCCUPIED = 0.0;
@@ -17,7 +16,7 @@ public class ConnectFourNeuralNetworkInputData {
 		this.data = data;
 	}
 
-	public ConnectFourNeuralNetworkInputData(GameGrid gameGrid, String myToken) throws InvalidGridLocationException {
+	public ConnectFourNeuralNetworkInputData(GameGrid gameGrid, String myToken) {
 		data = new double[GameProperties.ROWS * GameProperties.COLS];
 		for (int row = 0; row < GameProperties.ROWS; row++) {
 			for (int col = 0; col < GameProperties.COLS; col++) {

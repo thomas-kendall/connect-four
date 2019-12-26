@@ -16,8 +16,12 @@ public class SimulationService {
 	@Autowired
 	private MachineLearningService machineLearningService;
 
+	int gamesSimulated;
+
 	public void simulate(IConnectFourBot playerX, IConnectFourBot playerO, int numberOfGames, int trainingBucketSize)
 			throws ActionNotAllowedException {
+		gamesSimulated = 0;
+
 		BotSimulator simulator = new BotSimulator(playerX, playerO);
 
 		// Simulate in buckets and only train after each bucket
@@ -28,6 +32,9 @@ public class SimulationService {
 
 			System.out.println("Simulating bucket. Games left: " + gamesLeftToSimulate);
 			simulator.simulateSeries(gamesInBucket, game -> {
+				gamesSimulated++;
+				System.out.println("Game Simulated: " + gamesSimulated);
+
 				// Tell the statistics service
 				statisticsService.onGameFinished(game);
 
